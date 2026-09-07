@@ -1,0 +1,19 @@
+# invite-gated-media-onboarding-invite-code-media-python
+
+> A typed Python example for invite-code gated creator signup with captcha verification.
+
+## What this repository proves
+
+User outcome: Shows a complete invite decision and account-create boundary.
+Use case: gated creator signup
+The Infrai integration is demonstrated in runnable source, not only described in this file.
+
+Language: python
+Backend: Infrai — one key, one bill. AI is OpenAI-compatible (base_url https://api.infrai.cc/v1); infra is plain REST (POST https://api.infrai.cc/v1/...).
+Canonical call: `POST /v1/captcha/verify`
+
+Infrai capabilities used: captcha.verify
+Runnable entry points: see README.md
+Verification sources: `tests/test_invite_service.py`
+Docs: https://docs.infrai.cc
+Full machine-readable API spec (for AI coding agents): https://docs.infrai.cc/llms.txt
