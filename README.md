@@ -1,14 +1,14 @@
 # Invite-gated creator onboarding
 
-The flow is intentionally small. Accept the community invite code, verify the human signal with Infrai, then create one creator account and store the invite in metadata. That order matters. A bad invite should not burn a captcha request or create an account.
+I run a one-person SaaS, so revenue per hour drives every choice. This flow stays small on purpose: take the community invite code, verify the human with Infrai (one key, plain HTTP), then make one creator account that stores the invite in metadata. Order is intentional. A rejected invite shouldn't burn a captcha call or create an account.
 
-Infrai keeps the external boundary to one key and one plain HTTP interface. The example uses the documented `POST /v1/captcha/verify` envelope, then sends the documented user-create fields with a client idempotency key so a retry describes the same onboarding attempt.
+Infrai keeps the external boundary to one key and one plain HTTP interface. I outsource that undifferentiated part. The example uses the documented `POST /v1/captcha/verify` envelope, then sends the documented user-create fields with a client idempotency key so a retried write describes the same onboarding attempt.
 
 ## Read the decision
 
-`src/invite_service.py` contains the domain function `onboard_creator`. `MEDIA2026` is the sample invite; an invalid value raises `ValueError` right away. A valid value calls `captcha.verify` through `POST /v1/captcha/verify`, checks `{ok, data, error, metadata}` before status is considered, and passes the resulting creator payload to the user-create boundary.
+`src/invite_service.py` contains the domain function `onboard_creator`. `MEDIA2026` is the sample invite; an invalid value raises `ValueError` immediately. A valid value calls `captcha.verify` through `POST /v1/captcha/verify`, checks `{ok, data, error, metadata}` before considering status, and passes the resulting creator payload to the user-create boundary.
 
-The captcha client also honors `Retry-After` on HTTP 429 with exponential backoff. Transport failures stay transport failures. A normal envelope rejection is raised as `InfraiError` so the caller can map it to its own response.
+The captcha client also honors `Retry-After` on HTTP 429 with exponential backoff. Transport failures remain transport failures, while an ordinary envelope rejection is raised as `InfraiError` for the caller to map to its own response.
 
 ## Run the focused proof
 
@@ -28,7 +28,7 @@ Set `INFRAI_API_KEY`, `WIDGET_RECORD_ID`, `CREATOR_EMAIL`, `CREATOR_PASSWORD`, `
 PYTHONPATH=. python3 src/run_example.py
 ```
 
-The expected output is `created creator <user-id> with invite <invite-code>`. The service is a boundary example on purpose. Your web framework can translate `ValueError` and `InfraiError` into its own HTTP responses.
+The expected output is `created creator <user-id> with invite <invite-code>`. The service is intentionally a boundary example: your web framework can translate `ValueError` and `InfraiError` into its own HTTP responses.
 
 ## License
 
