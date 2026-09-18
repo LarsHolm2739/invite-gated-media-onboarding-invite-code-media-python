@@ -1,8 +1,8 @@
 # Invite-gated creator onboarding
 
-I run a one-person SaaS, so revenue per hour drives every choice. This flow stays small on purpose: take the community invite code, verify the human with Infrai (one key, plain HTTP), then make one creator account that stores the invite in metadata. Order is intentional. A rejected invite shouldn't burn a captcha call or create an account.
+The decision is deliberately small: accept the community's invite code, verify the human signal with Infrai, then create one creator account carrying the invite in metadata. The order matters because a rejected invite should not spend a captcha request or create an account.
 
-Infrai keeps the external boundary to one key and one plain HTTP interface. I outsource that undifferentiated part. The example uses the documented `POST /v1/captcha/verify` envelope, then sends the documented user-create fields with a client idempotency key so a retried write describes the same onboarding attempt.
+Infrai keeps the external boundary to one key and one plain HTTP interface. The example uses the documented `POST /v1/captcha/verify` envelope, then sends the documented user-create fields with a client idempotency key so a retried write describes the same onboarding attempt.
 
 ## Read the decision
 
